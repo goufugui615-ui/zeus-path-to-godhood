@@ -1,0 +1,19 @@
+# 操作系统 / 编辑器杂项
+.DS_Store
+Thumbs.db
+desktop.ini
+.idea/
+.vscode/
+*.swp
+
+# 依赖与构建产物（本项目零依赖，保留以防万一）
+node_modules/
+dist/
+build/
+package-lock.json
+
+# 本地临时文件
+*.log
+*.tmp
+_extracted.js
+_check.js
