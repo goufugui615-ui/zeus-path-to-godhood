@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>宙斯成神之路 · 开源网页游戏</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:"KaiTi","STKaiti","楷体",serif;background:#f4ecd8;color:#2b2b33;padding:30px 16px;}
+  .wrap{max-width:860px;margin:0 auto;}
+  .card{background:#fdf8ec;border:2.5px solid #2b2b33;border-radius:255px 15px 225px 15px/15px 225px 15px 255px;
+    box-shadow:4px 5px 0 rgba(43,43,51,.2);padding:26px 34px;margin:18px 0;}
+  h1{font-size:40px;color:#b8860b;letter-spacing:6px;text-align:center;}
+  .en{text-align:center;color:#a0946e;letter-spacing:5px;font-size:13px;margin:4px 0 14px;}
+  h2{font-size:22px;border-bottom:2px dashed rgba(43,43,51,.4);padding-bottom:6px;margin:14px 0 10px;color:#2f5d8a;}
+  p,li{font-size:15.5px;line-height:1.95;}
+  ul{padding-left:22px;}
+  .shots{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:12px 0;}
+  .shots img{width:100%;border:2px solid #2b2b33;border-radius:12px 120px 12px 110px/110px 12px 120px 12px;background:#fff;}
+  .shots span{display:block;text-align:center;font-size:13px;color:#7a6a45;margin-top:4px;}
+  .btn{display:inline-block;background:#d4a017;color:#fff;text-decoration:none;font-size:17px;padding:8px 30px;
+    border:2px solid #7a5a00;border-radius:225px 12px 255px 12px/12px 255px 12px 225px;box-shadow:2px 3px 0 rgba(0,0,0,.25);}
+  .btns{text-align:center;margin-top:16px;}
+  .promo{background:#efe6cf;}
+  .promo b{color:#b8860b;}
+  .footer{text-align:center;font-size:12.5px;color:#a0946e;margin-top:20px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="card">
+    <h1>宙斯成神之路</h1>
+    <div class="en">ZEUS : PATH TO GODHOOD · 开源网页游戏</div>
+    <p>你是宙斯，从 100 点神力起步。游走<b>五片大陆</b>——人类村庄、精灵森林、碧海深渊、神话火山、冥界边境，
+    与农家姑娘、树精灵、美人鱼、塞壬、凤凰乃至复仇女神结缘。<b>子嗣越多，神力越盛</b>；
+    攒满 10000 神力，登神成为众神之父。</p>
+    <p>但赫拉的目光从未离开。孔雀出现在地图上时，最好开始攒护佑金——毕竟你的孩子可能下一秒就变成牛（哞）。</p>
+    <div class="shots">
+      <div><img src="docs/game.png" alt="游戏画面"><span>手绘线条风 · 2.5D 大陆</span></div>
+      <div><img src="docs/hera.png" alt="赫拉降临"><span>赫拉降临：护佑还是忍受？</span></div>
+      <div><img src="docs/court.png" alt="求爱面板"><span>神力注入决定子嗣品质</span></div>
+      <div><img src="docs/breedanim.png" alt="演出"><span>含蓄搞笑的结缘演出</span></div>
+    </div>
+    <ul>
+      <li><b>零门槛</b>：双击 index.html 即玩，或浏览器在线游玩，无需安装任何东西</li>
+      <li><b>零素材</b>：所有画面为程序化手绘线条，所有音效由 Web Audio 实时合成</li>
+      <li><b>耐玩</b>：通关约 3 小时，25+ 随机事件、6 项神殿升级、5 档子嗣血统</li>
+      <li><b>开源</b>：MIT 协议，欢迎 Fork 魔改，加新大陆新物种新事件</li>
+    </ul>
+    <div class="btns">
+      <a class="btn" href="index.html">⚡ 立即开玩</a>
+    </div>
+  </div>
+
+  <div class="card promo">
+    <h2>这只游戏是怎么来的？</h2>
+    <p>《宙斯成神之路》从一句游戏点子到完整成品——玩法设计、数值模拟验证、
+    全部代码（7 个模块、3000+ 行）、20 多种手绘角色、25 个随机事件文案、自动测试与截图验证——
+    均由 <b>千问办公（QwenWork）</b> AI 桌面助手完成。</p>
+    <p>如果你也有一个想做的小游戏、小工具、小网站——把想法告诉千问办公就行。
+    它还能帮你把作品发布成开源项目、生成宣传页、一步上传 GitHub。</p>
+    <p style="text-align:center;margin-top:10px"><b>千问办公 · 让每个灵感都能落地</b></p>
+  </div>
+
+  <div class="footer">手绘线条风 · 网页开源游戏 · 所有演出均为含蓄的卡通表现，赫拉本人监督认证</div>
+</div>
+</body>
+</html>
