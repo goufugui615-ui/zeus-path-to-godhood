@@ -288,6 +288,7 @@ function startGame(fresh){
   Z.ui.menuAnim(false);
   Z.running = true;
   last = 0;
+  if (Z.stats){ Z.stats.visit(); Z.stats.start(); }   /* ← 统计：有人点进来并开局了 */
   Z.log('宙斯降临'+zone.name+'。神力 100，目标 10000，众神之父之路开始了。','good');
   Z.ui.eventBanner('宙斯降临', '神力 100 / 10000 —— 走近心仪的生命，按 E 开始求爱。', true);
   if (DEBUG==='hera'){ Z.state.hera.nextT = Z.state.t+3; Z.state.hera.warnAt = 0;

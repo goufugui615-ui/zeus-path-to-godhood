@@ -125,6 +125,7 @@ Z.conceive = function(cr, injectLv){
     dueT: t + pregTime, name: Z.genName(cr.zone)
   });
   Z.state.stats.courted++;
+  if (Z.stats) Z.stats.court(q);
   return { q, cost, pregTime };
 };
 
@@ -144,6 +145,7 @@ Z.updatePregnancies = function(){
         seed: Math.floor(Math.random()*1000), cow:false, curseUntil:0, departed:false, moving:false, target:null
       });
       Z.state.stats.births++;
+      if (Z.stats) Z.stats.birth(p.quality);   /* ← 统计：又多了一个后代 */
       /* 赫拉怒气 */
       const mythic = ['muse','siren','gorgo','sphinx','phoenix','fury','nyx','shade'].includes(p.key);
       Z.addAnger(mythic? 6 : 2.5);

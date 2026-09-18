@@ -99,6 +99,7 @@ Z.heraPunish = function(off){
   if (roll < 0.5 && !off.cow){
     off.cow = true;
     Z.state.stats.cows++;
+    if (Z.stats) Z.stats.cow();   /* ← 统计：赫拉又得手一次 */
     Z.audio.moo();
     return { type:'cow', text: off.name+' 被赫拉变成了一头牛。收益大幅下降，哞。' };
   } else if (roll < 0.8 && off.quality > 0){
@@ -268,6 +269,7 @@ Z.tick = function(dt){
   /* 登神 */
   if (st.power >= 10000 && !st.won){
     st.won = true;
+    if (Z.stats) Z.stats.win();   /* ← 统计：又有人登神了 */
     if (Z.ui) Z.ui.win();
   }
 };

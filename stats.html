@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>宙斯成神之路 · 数据后台</title>
+<style>
+  :root{ --ink:#2b2b33; --paper:#f4ecd8; --gold:#b8860b; --red:#a63a2b; --green:#4a6b3a; }
+  *{ margin:0; padding:0; box-sizing:border-box; }
+  body{ background:#e8d9b8; color:var(--ink);
+    font-family:"PingFang SC","Microsoft YaHei",system-ui,sans-serif; padding:26px; }
+  .wrap{ max-width:1080px; margin:0 auto; }
+  header{ display:flex; align-items:baseline; gap:14px; flex-wrap:wrap; margin-bottom:18px; }
+  h1{ font-size:26px; letter-spacing:2px; }
+  .sub{ color:#7a6a45; font-size:13px; }
+  .card{ background:var(--paper); border:2px solid var(--ink); border-radius:14px;
+    padding:16px 18px; margin-bottom:16px; box-shadow:3px 3px 0 rgba(43,43,51,.15); }
+  .cfg{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+  input{ flex:1; min-width:220px; padding:9px 12px; border:2px solid var(--ink); border-radius:8px;
+    background:#fffaf0; font-family:inherit; font-size:14px; color:var(--ink); }
+  button{ padding:9px 18px; border:2px solid var(--ink); border-radius:8px; background:var(--gold);
+    color:#fff; font-family:inherit; font-size:14px; cursor:pointer; font-weight:bold; }
+  button.ghost{ background:#f8f0dc; color:var(--ink); }
+  button:hover{ filter:brightness(1.08); }
+  .grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:12px; }
+  .stat{ background:var(--paper); border:2px solid var(--ink); border-radius:12px; padding:14px 16px; }
+  .stat .label{ font-size:12.5px; color:#7a6a45; }
+  .stat .val{ font-size:30px; font-weight:bold; line-height:1.25; }
+  .stat .val.big{ color:var(--red); }
+  .stat .note{ font-size:11.5px; color:#8a7a55; }
+  h2{ font-size:16px; margin:4px 0 12px; letter-spacing:1px; }
+  table{ width:100%; border-collapse:collapse; font-size:13.5px; }
+  th,td{ padding:6px 8px; text-align:left; border-bottom:1px dashed #b8a57a; }
+  th{ color:#7a6a45; font-weight:normal; font-size:12.5px; }
+  .bar{ height:8px; background:#d8c9a3; border-radius:4px; overflow:hidden; }
+  .bar > i{ display:block; height:100%; background:var(--gold); }
+  .qrow{ display:flex; align-items:center; gap:10px; margin:6px 0; font-size:13.5px; }
+  .qrow .nm{ width:96px; color:#7a6a45; }
+  .qrow .bar{ flex:1; }
+  .qrow .n{ width:52px; text-align:right; }
+  .msg{ color:var(--red); font-size:13.5px; margin-top:10px; min-height:18px; }
+  .hint{ font-size:12.5px; color:#7a6a45; line-height:1.8; }
+  code{ background:#efe3c5; padding:1px 6px; border-radius:4px; font-size:12.5px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>⚡ 宙斯成神之路 · 数据后台</h1>
+    <span class="sub" id="updated"></span>
+  </header>
+
+  <div class="card">
+    <div class="cfg">
+      <input id="ep" placeholder="后端地址，如 https://zeus-stats.xxx.workers.dev">
+      <input id="key" placeholder="查看口令（没设就留空）">
+      <button onclick="load()">刷新数据</button>
+      <button class="ghost" onclick="saveCfg()">记住配置</button>
+    </div>
+    <div class="msg" id="msg"></div>
+    <div class="hint" style="margin-top:10px">
+      配置会自动保存到本机浏览器。后端用的是 <code>tools/cloudflare-worker.js</code>（Cloudflare Worker + KV，免费）。
+    </div>
+  </div>
+
+  <div class="grid" id="cards"></div>
+
+  <div class="card">
+    <h2>👶 后代品质分布</h2>
+    <div id="quality"></div>
+  </div>
+
+  <div class="card">
+    <h2>📅 近 30 天</h2>
+    <table id="daily">
+      <thead><tr><th>日期</th><th>独立访客</th><th>访问</th><th>开局</th><th>新诞生后代</th><th>登神</th></tr></thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>怎么接上</h2>
+    <div class="hint">
+      1. 部署 Cloudflare Worker（<code>tools/cloudflare-worker.js</code>），绑定一个 KV 命名空间，变量名填 <code>ZEUS</code>；可选加机密变量 <code>ADMIN_KEY</code> 当口令。<br>
+      2. 打开 <code>js/stats.js</code>，把 <code>mode</code> 改成 <code>'api'</code>，<code>endpoint</code> 填 Worker 域名。<br>
+      3. 把改动推到 GitHub Pages，玩家打开游戏就会自动上报。<br>
+      <b>指标含义</b>：独立访客=按 IP 每天去重的人数；访问=打开次数；后代总数=所有玩家累计生出的子嗣数（核心指标）。
+    </div>
+  </div>
+</div>
+
+<script>
+const $ = id => document.getElementById(id);
+const NAMES = ['凡人血统','半神血统','英雄血统','神裔','传奇神裔'];
+
+function saveCfg(){
+  localStorage.setItem('zeus_ep', $('ep').value.trim());
+  localStorage.setItem('zeus_key', $('key').value.trim());
+  $('msg').textContent = '配置已保存到本机';
+}
+function restore(){
+  $('ep').value = localStorage.getItem('zeus_ep') || '';
+  $('key').value = localStorage.getItem('zeus_key') || '';
+}
+
+function fmt(n){ return (n||0).toLocaleString('en-US'); }
+
+async function load(){
+  const ep = $('ep').value.trim().replace(/\/$/,'');
+  const k = $('key').value.trim();
+  $('msg').textContent = '正在拉取…';
+  try{
+    const r = await fetch(ep + '/stats' + (k ? '?k=' + encodeURIComponent(k) : ''));
+    const d = await r.json();
+    if (d.error){ $('msg').textContent = '❌ ' + d.error; return; }
+    render(d);
+    $('msg').textContent = '';
+  }catch(e){
+    $('msg').textContent = '❌ 拉不到数据：' + e.message + '（检查地址/网络，或后端 CORS）';
+  }
+}
+
+function render(d){
+  const t = d.totals || {};
+  const avg = t.start ? (t.birth / t.start) : 0;
+  const winRate = t.start ? (t.win / t.start * 100) : 0;
+  $('updated').textContent = '更新于 ' + (d.updated || '').replace('T',' ').slice(0,19);
+
+  const cards = [
+    { label:'独立访客 UV', val: t.uv, note:'按 IP 每日去重' },
+    { label:'访问次数 PV', val: t.pv, note:'页面打开次数' },
+    { label:'后代总数', val: t.birth, note:'★ 核心指标', big:true },
+    { label:'开局次数', val: t.start, note:'点了开始游戏' },
+    { label:'求爱次数', val: t.court, note:'成功结缘' },
+    { label:'登神人数', val: t.win, note:'登神率 ' + winRate.toFixed(1) + '%' },
+    { label:'被变成牛', val: t.cow, note:'赫拉的战果' },
+    { label:'人均后代', val: avg.toFixed(1), note:'每开局平均' },
+  ];
+  $('cards').innerHTML = cards.map(c =>
+    `<div class="stat"><div class="label">${c.label}</div>
+     <div class="val${c.big?' big':''}">${fmt(c.val)}</div>
+     <div class="note">${c.note}</div></div>`).join('');
+
+  const q = d.quality || {};
+  const maxQ = Math.max(1, ...Object.values(q).map(v=>v||0));
+  $('quality').innerHTML = NAMES.map((n,i)=>{
+    const v = q[i] || 0;
+    return `<div class="qrow"><span class="nm">${n}</span>
+      <span class="bar"><i style="width:${(v/maxQ*100).toFixed(1)}%;background:${['#7a6a45','#4a6b3a','#2f5d8a','#b8860b','#a63a2b'][i]}"></i></span>
+      <span class="n">${fmt(v)}</span></div>`;
+  }).join('');
+
+  const rows = (d.daily || []).map(x=>{
+    const mx = Math.max(1, x.pv||0);
+    return `<tr><td>${x.date}</td>
+      <td>${fmt(x.uv)}</td>
+      <td><div class="bar"><i style="width:${((x.pv||0)/mx*100).toFixed(0)}%"></i></div></td>
+      <td>${fmt(x.start)}</td>
+      <td>${fmt(x.birth)}</td>
+      <td>${fmt(x.win)}</td></tr>`;
+  }).join('');
+  document.querySelector('#daily tbody').innerHTML = rows || '<tr><td colspan="6">暂无数据</td></tr>';
+}
+
+restore();
+if ($('ep').value) load();
+</script>
+</body>
+</html>
