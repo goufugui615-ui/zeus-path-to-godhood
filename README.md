@@ -138,7 +138,8 @@ var LA_CK = '你的CK';
 
 **接入三步**（约 5 分钟，全部免费）：
 
-1. 部署 `tools/cloudflare-worker.js` 到 Cloudflare Worker，绑一个 KV 命名空间（变量名 `ZEUS`）
+1. 双击 **`deploy.html`**，填 Cloudflare API Token，点两下自动部署（自动建 KV + 上传 Worker）
+   也可以手动：把 `tools/cloudflare-worker.js` 粘进 Worker，绑 KV 命名空间（变量名 `ZEUS`）
 2. 打开 `js/stats.js`，把 `mode` 改成 `'api'`，`endpoint` 填 Worker 域名
 3. 双击根目录的 `stats.html`，填同一个地址，就能看仪表盘
 
