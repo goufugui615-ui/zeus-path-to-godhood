@@ -3,8 +3,8 @@
  *
  * 【要统计什么】
  *   1. 多少人点进链接   → visit（PV 每次打开 / UV 每日去重）
- *   2. 繁衍了多少后代   → birth（携带子嗣品质 q0~q4）
- *   3. 开局次数 / 求爱次数 / 登神人数 / 被赫拉变成牛的次数
+ *   2. 留下多少眷属   → birth（携带眷属品质 q0~q4）
+ *   3. 开局次数 / 点化次数 / 登神人数 / 被赫拉变成牛的次数
  *
  * 【两种模式】
  *   mode = 'api'  → 上报到自建后端（Cloudflare Worker，见 tools/cloudflare-worker.js）
@@ -77,11 +77,11 @@ Z.stats = {
   start: function(){
     post('start', { uv: oncePerDay('start') ? 1 : 0 });
   },
-  /** 求爱成功 */
+  /** 点化成功 */
   court: function(quality){
     post('court', { q: quality == null ? -1 : quality });
   },
-  /** 子嗣诞生：核心指标——后代数量 */
+  /** 眷属诞生：核心指标——眷属数量 */
   birth: function(quality){
     post('birth', { q: quality == null ? -1 : quality });
   },

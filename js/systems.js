@@ -42,10 +42,10 @@ Z.addPower = function(v, silent){
 
 /* ---------- 升级定义 ---------- */
 Z.UPGRADES = {
-  charm:    { name:'魅力光环', max:5, base:120,  mult:2.2, desc:'求爱成本 -6%/级。宙斯每天用霹雳蜡打理胡子。' },
-  might:    { name:'神威',     max:5, base:150,  mult:2.3, desc:'神力注入升档成功率 +8%/级。闪电越亮，基因越强。' },
-  nursery:  { name:'云端保育室', max:4, base:200, mult:2.4, desc:'孕育与成长时间 -12%/级。奥林匹斯最高端的月子中心。' },
-  siphon:   { name:'神力虹吸', max:5, base:260,  mult:2.5, desc:'全体子嗣收益 +6%/级。血脉就是自来水管。' },
+  charm:    { name:'魅力光环', max:5, base:120,  mult:2.2, desc:'点化成本 -6%/级。宙斯每天用霹雳蜡打理胡子。' },
+  might:    { name:'神威',     max:5, base:150,  mult:2.3, desc:'神力注入升档成功率 +8%/级。闪电越亮，品阶越高。' },
+  nursery:  { name:'云端保育室', max:4, base:200, mult:2.4, desc:'凝聚与成长时间 -12%/级。奥林匹斯最高端的育成之所。' },
+  siphon:   { name:'神力虹吸', max:5, base:260,  mult:2.5, desc:'全体眷属收益 +6%/级。眷属就是自来水管。' },
   appease:  { name:'赫拉安抚基金', max:3, base:300, mult:2.6, desc:'赫拉怒气增速 -15%/级。礼物、鲜花、还有免责声明。' },
   deter:    { name:'雷霆威慑', max:3, base:180,  mult:2.2, desc:'负面事件效果 -20%/级。泰坦看到宙斯就装睡。' }
 };
@@ -66,7 +66,7 @@ Z.scheduleHera = function(firstDelay){
 };
 Z.updateHera = function(dt){
   const t = Z.state.t, h = Z.state.hera;
-  if (Z.state.offspring.length < 5) return; /* 子嗣太少，赫拉懒得下来 */
+  if (Z.state.offspring.length < 5) return; /* 眷属太少，赫拉懒得下来 */
   if (!h.nextT) Z.scheduleHera(420);
   /* 孔雀先兆 */
   if (t >= h.warnAt && t < h.nextT && !Z.state.peacock){
@@ -105,13 +105,13 @@ Z.heraPunish = function(off){
   } else if (roll < 0.8 && off.quality > 0){
     off.quality -= 1;
     Z.audio.angry();
-    return { type:'downgrade', text: off.name+' 的血统被赫拉的诅咒削弱，品质下降一档。' };
+    return { type:'downgrade', text: off.name+' 的品阶被赫拉的诅咒削弱，品质下降一档。' };
   } else {
     const zone = Z.zoneById(off.zone);
     const mother = zone.creatures.find(c=>c.id && c.key===off.key) || zone.creatures[0];
     if (mother) mother.cursedUntil = t + 240;
     Z.audio.angry();
-    return { type:'curse', text: '赫拉诅咒了'+Z.SPECIES[off.key].name+'们，她们四分钟内拒绝宙斯的任何求爱。' };
+    return { type:'curse', text: '赫拉诅咒了'+Z.SPECIES[off.key].name+'们，她们四分钟内拒绝宙斯的任何点化。' };
   }
 };
 Z.giveGift = function(){
@@ -133,7 +133,7 @@ Z.EVENTS = [
     text:'赫尔墨斯送来一封粉丝来信，信封里夹着神力。',
     apply(){ Z.addPower(ri(15,40)); } },
   { id:'museBless', good:true, name:'缪斯加护', w:7,
-    text:'九位缪斯为宙斯谱了一首颂歌，子嗣们干劲十足。',
+    text:'九位缪斯为宙斯谱了一首颂歌，眷属们干劲十足。',
     apply(){ Z.addTemp('muse','缪斯加护：收益+50%',{income:1.5},90); } },
   { id:'goldenapple', good:true, name:'金苹果', w:6,
     text:'一颗金苹果滚到了地图上！传说点它的人有好运。',
@@ -143,23 +143,23 @@ Z.EVENTS = [
     text:'雅典娜：“父亲，下次播种前记得加BUFF。”（下一位置嗣品质+1）',
     apply(){ Z.state.flags.athena++; } },
   { id:'aphrodite', good:true, name:'阿佛洛狄忒的祝福', w:5,
-    text:'爱与美之神路过，对宙斯眨了眨眼。（下次求爱免费）',
+    text:'爱与美之神路过，对宙斯眨了眨眼。（下次点化免费）',
     apply(){ Z.state.flags.aphrodite++; } },
   { id:'dionysus', good:true, name:'酒神狂欢', w:6,
-    text:'狄俄尼索斯开了一场轰趴，气氛到位。（求爱成本-50%，60秒）',
-    apply(){ Z.addTemp('wine','酒神狂欢：求爱5折',{courtCost:0.5},60); } },
+    text:'狄俄尼索斯开了一场轰趴，气氛到位。（点化成本-50%，60秒）',
+    apply(){ Z.addTemp('wine','酒神狂欢：点化5折',{courtCost:0.5},60); } },
   { id:'weaving', good:true, name:'纺织女神的线', w:6,
-    text:'命运三女神加快了纺线。（孕育与成长速度翻倍，60秒）',
+    text:'命运三女神加快了纺线。（凝聚与成长速度翻倍，60秒）',
     apply(){ Z.addTemp('weave','命运加速：成长2倍',{grow:0.5},60); } },
   { id:'harvest', good:true, name:'丰收祭典', w:6, minOff:3,
-    text:'人间丰收，村庄与森林的母亲们心情大好，全员就绪。',
+    text:'人间丰收，村庄与森林的生灵们心情大好，全员就绪。',
     apply(){ for (const z of Z.ZONES){ if (!z.creatures) continue;
       if (z.id==='village'||z.id==='forest') z.creatures.forEach(c=>{ c.restUntil=Math.min(c.restUntil,Z.state.t); }); } } },
   { id:'heracles', good:true, name:'赫拉克勒斯认爹', w:4, minQ:2,
-    text:'一位英雄级子嗣完成十二伟业，全希腊都在传颂宙斯之名。',
+    text:'一位英雄级眷属完成十二伟业，全希腊都在传颂宙斯之名。',
     apply(){ Z.addPower(60 + Z.state.power*0.02); } },
   { id:'olympics', good:true, name:'半神运动会', w:5, minOff:8,
-    text:'子嗣们在奥林匹亚举办运动会，观众献上大量祭品。',
+    text:'眷属们在奥林匹亚举办运动会，观众献上大量祭品。',
     apply(){ Z.addPower(Z.state.offspring.length*8); } },
   { id:'templeBuilt', good:true, name:'凡人建庙', w:5, minOff:6,
     text:'凡人为宙斯修建了一座新神庙，香火旺盛。',
@@ -169,7 +169,7 @@ Z.EVENTS = [
     apply(){ Z.addPower(25); } },
   /* —— 负面 —— */
   { id:'typhon', good:false, name:'堤丰苏醒', w:8,
-    text:'万魔之王堤丰翻了个身，子嗣们吓得停止了供能。（30秒）',
+    text:'万魔之王堤丰翻了个身，眷属们吓得停止了供能。（30秒）',
     apply(){ const d=1-0.2*Z.state.upgrades.deter;
       if (d<1){ Z.addTemp('typhon','堤丰恐惧：收益暂停',{income:0.02},30*d); }
       else Z.log('雷霆威慑生效，堤丰看了宙斯一眼又睡了回去。','good'); } },
@@ -185,15 +185,15 @@ Z.EVENTS = [
     apply(){ const bill = Z.state.power*0.03*(1-0.2*Z.state.upgrades.deter);
       Z.addPower(-bill); Z.log('宙斯支付了 '+Math.round(bill)+' 神力的冥界账单。','bad'); } },
   { id:'cyclops', good:false, name:'独眼巨人砸场', w:5, minOff:3,
-    text:'一个独眼巨人路过，吓跑了一位母亲。',
+    text:'一个独眼巨人路过，吓跑了一位生灵。',
     apply(){ const zone = Z.zoneById(Z.zeus.zone);
       const c = pick(zone.creatures); if (c) c.scaredUntil = Z.state.t + 60; } },
   { id:'fire', good:false, name:'森林小火', w:5, minPower:300,
     text:'精灵森林起了小火，扑救花费了一些神力。',
     apply(){ Z.addPower(-(20+Z.state.power*0.01*(1-0.2*Z.state.upgrades.deter))); } },
   { id:'echo', good:false, name:'回声的抱怨', w:4, minOff:4,
-    text:'宁芙厄科还在为当年的事生气，到处说宙斯坏话。（求爱成本+30%，60秒）',
-    apply(){ Z.addTemp('echo','流言四起：求爱成本+30%',{courtCost:1.3},60); } },
+    text:'宁芙厄科还在为当年的事生气，到处说宙斯坏话。（点化成本+30%，60秒）',
+    apply(){ Z.addTemp('echo','流言四起：点化成本+30%',{courtCost:1.3},60); } },
   { id:'sisyphus', good:false, name:'西西福斯的忠告', w:4, minOff:6,
     text:'西西福斯推着石头路过：“坚持下去，就像我一样。”（收益-15%，30秒）',
     apply(){ Z.addTemp('sisy','存在主义疲惫：收益-15%',{income:0.85},30); } },
@@ -308,7 +308,7 @@ Z.load = function(){
   st.log = data.log||[]; st.hera = data.hera||st.hera; st._oid = data._oid||st.offspring.length;
   Z.zeus.x = data.zeus? data.zeus.x : 1100; Z.zeus.y = data.zeus? data.zeus.y : 750;
   Z.zeus.zone = (data.zeus && Z.state.unlocked.includes(data.zeus.zone)) ? data.zeus.zone : 'village';
-  /* 恢复子嗣位置（母亲附近） */
+  /* 恢复眷属位置（生灵附近） */
   for (const off of st.offspring){
     if (off.departed) continue;
     const zone = Z.zoneById(off.zone);
@@ -324,7 +324,7 @@ Z.load = function(){
     if (away > 60){
       const gain = Z.totalIncomeRate() * away * 0.5;
       st.power += gain;
-      if (Z.ui) setTimeout(()=>{ Z.ui.toast('离开期间，子嗣们为宙斯积攒了 '+Math.round(gain)+' 神力','good'); }, 800);
+      if (Z.ui) setTimeout(()=>{ Z.ui.toast('离开期间，眷属们为宙斯积攒了 '+Math.round(gain)+' 神力','good'); }, 800);
       Z.log('离线收益：+'+Math.round(gain)+' 神力','good');
     }
   }

@@ -290,7 +290,7 @@ function startGame(fresh){
   last = 0;
   if (Z.stats){ Z.stats.visit(); Z.stats.start(); }   /* ← 统计：有人点进来并开局了 */
   Z.log('宙斯降临'+zone.name+'。神力 100，目标 10000，众神之父之路开始了。','good');
-  Z.ui.eventBanner('宙斯降临', '神力 100 / 10000 —— 走近心仪的生命，按 E 开始求爱。', true);
+  Z.ui.eventBanner('宙斯降临', '神力 100 / 10000 —— 走近心仪的生命，按 E 开始点化。', true);
   if (DEBUG==='hera'){ Z.state.hera.nextT = Z.state.t+3; Z.state.hera.warnAt = 0;
     for (let i=0;i<5;i++) Z.state.offspring.push({id:'x'+i,name:['阿尔克斯','珀耳拉娅','忒修德斯','达那厄俄','赫柏斯特拉'][i],key:'villager',quality:3,birthT:-1000,zone:'village',x:1100+i*40,y:800+i*20,hx:1100,hy:800,seed:5+i,cow:i===3,curseUntil:0,departed:false,moving:false,target:null}); }
   if (DEBUG==='demo'){
@@ -368,7 +368,7 @@ if (SELFTEST){
       const d = Z.getDecors(zone);
       return d.length>10 && d.some(x=>x.key==='gate');
     });
-    T('求爱成本计算', ()=>{
+    T('点化成本计算', ()=>{
       Z.state.power = 100000;
       const c = zone.creatures[0];
       const c1 = Z.courtCost(c);
@@ -377,7 +377,7 @@ if (SELFTEST){
       Z.state.offspring.pop();
       return c1>0 && c2>c1;
     });
-    T('求爱→怀孕→分娩→收益 全链路', ()=>{
+    T('点化→怀孕→分娩→收益 全链路', ()=>{
       Z.newState();
       const zone2 = Z.zoneById('village');
       const c = zone2.creatures[0];

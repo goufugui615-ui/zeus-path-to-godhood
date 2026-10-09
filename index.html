@@ -69,7 +69,7 @@
   .row{display:flex;gap:10px;align-items:center;margin:8px 0;flex-wrap:wrap;}
   .divider{border:none;border-top:2px dashed rgba(43,43,51,.35);margin:10px 0;}
 
-  /* 求爱面板 */
+  /* 点化面板 */
   .mother-card{display:flex;gap:14px;align-items:center;background:#faf3df;border:2px solid var(--ink);border-radius:15px 120px 15px 110px/110px 15px 120px 15px;padding:10px 16px;}
   .mother-card canvas{background:#fff9ea;border:1.5px solid rgba(43,43,51,.4);border-radius:50% 45% 55% 48%;flex:none;}
   .q-stars{color:var(--gold);letter-spacing:2px;font-size:16px;}
@@ -77,7 +77,7 @@
   input[type=range]::-webkit-slider-runnable-track{height:8px;background:#d8c9a3;border:2px solid var(--ink);border-radius:6px;}
   input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;margin-top:-9px;background:var(--zeus-accent);border:2.5px solid var(--ink);border-radius:45% 55% 50% 50%;box-shadow:1px 1px 0 rgba(0,0,0,.3);}
 
-  /* 子嗣表 */
+  /* 眷属表 */
   table.roster{width:100%;border-collapse:collapse;font-size:14px;}
   table.roster th{border-bottom:2px solid var(--ink);text-align:left;padding:4px 6px;color:#7a6a45;}
   table.roster td{border-bottom:1.5px dashed rgba(43,43,51,.3);padding:4px 6px;}
@@ -108,7 +108,7 @@
   #log-list .t{color:#a0946e;margin-right:6px;font-size:12px;}
   #log-list .good{color:var(--green);} #log-list .bad{color:var(--red);}
 
-  /* ---------- 繁殖动画 ---------- */
+  /* ---------- 点化演出 ---------- */
   #breed-overlay{position:absolute;inset:0;background:rgba(28,26,34,0);z-index:60;display:none;align-items:center;justify-content:center;transition:background .5s;}
   #breed-overlay.on{background:rgba(28,26,34,.88);}
   #breed-stage{position:relative;width:560px;height:420px;}
@@ -184,7 +184,7 @@
         <div id="hera-hint"></div>
       </div>
       <div id="hud-buttons">
-        <button class="sketch-btn" id="btn-roster">子嗣名录</button>
+        <button class="sketch-btn" id="btn-roster">眷属名录</button>
         <button class="sketch-btn" id="btn-temple">奥林匹斯神殿</button>
         <button class="sketch-btn" id="btn-map">神界地图 <kbd>Q</kbd></button>
         <button class="sketch-btn" id="btn-log">日志</button>
@@ -194,7 +194,7 @@
       </div>
     </div>
     <div id="zone-label" class="sketch">人类村庄</div>
-    <div id="interact-tip" class="sketch">按 <kbd>E</kbd> 向 农家姑娘 求爱</div>
+    <div id="interact-tip" class="sketch">按 <kbd>E</kbd> 点化 农家少女</div>
     <div id="event-banner" class="sketch"><div id="event-banner-main"></div><div class="sub" id="event-banner-sub"></div></div>
     <div id="toasts"></div>
 
@@ -230,8 +230,8 @@
       <div id="menu-inner" class="sketch">
         <h1>宙斯成神之路</h1>
         <div class="en">ZEUS : PATH TO GODHOOD</div>
-        <div class="desc">从 100 点神力起步，游走五片大陆，与凡人、精灵、美人鱼乃至神话生物结缘。<br>
-        子嗣越多，神力越盛——但赫拉的目光，也从未离开。<br>
+        <div class="desc">从 100 点神力起步，游走五片大陆，点化凡人、精灵、美人鱼乃至神话生物。<br>
+        眷属越多，神力越盛——但赫拉的目光，也从未离开。<br>
         攒满 <b>10000 神力</b>，登神成为众神之父。</div>
         <div class="btns">
           <button class="sketch-btn gold" id="btn-new">开始成神之路</button>

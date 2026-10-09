@@ -1,5 +1,5 @@
 /* ============================================================
- * 宙斯成神之路 · 实体系统：宙斯、生物AI、求爱、孕育、子嗣
+ * 宙斯成神之路 · 实体系统：宙斯、生物AI、点化、凝聚、眷属
  * ============================================================ */
 (function(){
 'use strict';
@@ -7,14 +7,14 @@ const Z = (window.Z = window.Z || {});
 
 /* ---------- 品质档位 ---------- */
 Z.QUALITY = [
-  { name:'凡人血统',   rate:0.02, color:'#7a6a45' },
-  { name:'半神血统',   rate:0.05, color:'#4a6b3a' },
-  { name:'英雄血统',   rate:0.12, color:'#2f5d8a' },
+  { name:'凡人',   rate:0.02, color:'#7a6a45' },
+  { name:'半神',   rate:0.05, color:'#4a6b3a' },
+  { name:'英雄',   rate:0.12, color:'#2f5d8a' },
   { name:'神裔',       rate:0.30, color:'#b8860b' },
   { name:'传奇神裔',   rate:0.75, color:'#a63a2b' }
 ];
 
-/* ---------- 子嗣命名 ---------- */
+/* ---------- 眷属命名 ---------- */
 const NAMES = {
   village:  { pre:['赫拉克','珀尔修','忒修','阿喀琉','伊阿宋','卡德摩','珀罗普','达那厄','阿尔克','赫柏'],
               suf:['斯','忒斯','德斯','俄斯','尼俄','拉娅','斯特拉'] },
@@ -61,8 +61,8 @@ Z.updateCreatures = function(zone, dt){
   for (const a of zone.ambients) wander(a, dt, a.key==='dolphin'?42:20, 90);
 };
 
-/* ---------- 求爱计算 ---------- */
-/* 求爱基础成本：随子嗣数缓慢递增（0.06/个，原为 0.10） */
+/* ---------- 点化计算 ---------- */
+/* 点化基础成本：随眷属数缓慢递增（0.06/个，原为 0.10） */
 Z.courtCost = function(cr){
   const zone = Z.zoneById(cr.zone);
   const n = Z.state.offspring.length;
@@ -85,7 +85,7 @@ Z.rollQuality = function(cr, injectLv){
   let q = spec.baseQ;
   const might = Z.state.upgrades.might;
   for (let i=0;i<injectLv;i++){ if (Math.random() < 0.55 + might*0.08) q++; }
-  q -= Math.floor(cr.courtCount/2); /* 同一母亲重复繁殖惩罚 */
+  q -= Math.floor(cr.courtCount/2); /* 同一生灵重复点化惩罚 */
   if (Z.state.flags.athena > 0){ q++; Z.state.flags.athena--; }
   if (Math.random() < 0.10) q++;
   if (Math.random() < 0.12) q--;
@@ -99,14 +99,14 @@ Z.qualityExpect = function(cr, injectLv){ /* 面板上的期望展示 */
 };
 Z.canCourt = function(cr, t){
   t = (t==null? Z.state.t : t);
-  if (cr.pregnantUntil > t) return { ok:false, why:'孕育中…' };
+  if (cr.pregnantUntil > t) return { ok:false, why:'凝聚中…' };
   if (cr.restUntil > t) return { ok:false, why:'需要休息（'+Math.ceil(cr.restUntil-t)+'秒）' };
   if (cr.cursedUntil > t) return { ok:false, why:'被赫拉诅咒，拒绝宙斯' };
   if (cr.scaredUntil > t) return { ok:false, why:'被吓跑了，正在缓神' };
   return { ok:true };
 };
 
-/* ---------- 求爱 → 播种 ---------- */
+/* ---------- 点化 → 播种 ---------- */
 Z.conceive = function(cr, injectLv){
   const t = Z.state.t;
   const cost = Z.courtCost(cr) + Z.injectCost(cr, injectLv);
@@ -145,7 +145,7 @@ Z.updatePregnancies = function(){
         seed: Math.floor(Math.random()*1000), cow:false, curseUntil:0, departed:false, moving:false, target:null
       });
       Z.state.stats.births++;
-      if (Z.stats) Z.stats.birth(p.quality);   /* ← 统计：又多了一个后代 */
+      if (Z.stats) Z.stats.birth(p.quality);   /* ← 统计：又多了一位眷属 */
       /* 赫拉怒气 */
       const mythic = ['muse','siren','gorgo','sphinx','phoenix','fury','nyx','shade'].includes(p.key);
       Z.addAnger(mythic? 6 : 2.5);
@@ -154,7 +154,7 @@ Z.updatePregnancies = function(){
   }
 };
 
-/* ---------- 子嗣 ---------- */
+/* ---------- 眷属 ---------- */
 Z.growTime = function(){ return 150 * (1 - 0.12*Z.state.upgrades.nursery) * Z.tempMult('grow'); };
 Z.offspringStage = function(off){
   const age = Z.state.t - off.birthT;
@@ -235,7 +235,7 @@ Z.moveZeus = function(dt, input){
   Z.eagle.ang += dt*1.6;
 };
 
-/* ---------- 场上出生的子嗣随存档保存/恢复 ---------- */
+/* ---------- 场上出生的眷属随存档保存/恢复 ---------- */
 Z.serializeCreatures = function(){
   const out = {};
   for (const zone of Z.ZONES){

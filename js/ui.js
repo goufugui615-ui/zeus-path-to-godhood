@@ -52,8 +52,8 @@ const UI = {
   updateHUD(){
     const st = Z.state;
     $('power-value').textContent = Math.floor(st.power).toLocaleString();
-    $('power-rate').textContent = '+' + st.rate.toFixed(2) + ' /秒 · 子嗣 ' + st.offspring.length +
-      (st.pregnancies.length ? ' · 孕育中 ' + st.pregnancies.length : '');
+    $('power-rate').textContent = '+' + st.rate.toFixed(2) + ' /秒 · 眷属 ' + st.offspring.length +
+      (st.pregnancies.length ? ' · 凝聚中 ' + st.pregnancies.length : '');
     const anger = st.anger;
     $('hera-bar').style.width = Math.min(100, anger) + '%';
     $('hera-count').textContent = st.hera.visits ? '降临 '+st.hera.visits+' 次' : '';
@@ -61,7 +61,7 @@ const UI = {
     if (st.offspring.length >= 5){
       const wait = Math.max(0, Math.round((st.hera.nextT||0) - st.t));
       hint.textContent = anger > 55 ? '赫拉怒火中烧…' : (wait < 120 ? '远处似乎有孔雀的叫声…' : '暂时风平浪静');
-    } else hint.textContent = '子嗣达到 5 个后，赫拉会开始巡访';
+    } else hint.textContent = '眷属达到 5 个后，赫拉会开始巡访';
     $('zone-label').textContent = Z.zoneById(Z.zeus.zone).name +
       (st.won ? ' · 众神之父' : '');
   },
@@ -75,17 +75,17 @@ const UI = {
     const tip = $('interact-tip');
     if (!best){ tip.style.display='none'; return; }
     const name = Z.SPECIES[best.key].name;
-    if (why.ok){ tip.style.display='block'; tip.innerHTML = '按 <kbd>E</kbd> 向 <b>'+name+'</b> 求爱'; }
+    if (why.ok){ tip.style.display='block'; tip.innerHTML = '按 <kbd>E</kbd> 向 <b>'+name+'</b> 点化'; }
     else { tip.style.display='block'; tip.innerHTML = name+'：'+why.why; }
   },
 
-  /* ---------- 求爱面板 ---------- */
+  /* ---------- 点化面板 ---------- */
   courtship(cr){
     const spec = Z.SPECIES[cr.key];
     const stars = q => '★'.repeat(q+1) + '☆'.repeat(4-q);
     let injectLv = 1;
     const cost = ()=> Z.courtCost(cr) + Z.injectCost(cr, injectLv);
-    const mask = this.openModal('求爱 · ' + spec.name, `
+    const mask = this.openModal('点化 · ' + spec.name, `
       <div class="mother-card">
         <canvas id="court-portrait" width="110" height="130"></canvas>
         <div style="flex:1">
@@ -96,7 +96,7 @@ const UI = {
       </div>
       <hr class="divider">
       <div class="row" style="justify-content:space-between">
-        <b>神力注入</b><span style="font-size:12.5px;color:#7a6a45">注入越多，子嗣品质越高（消耗也越大）</span>
+        <b>神力注入</b><span style="font-size:12.5px;color:#7a6a45">注入越多，眷属品质越高（消耗也越大）</span>
       </div>
       <input type="range" id="court-slider" min="0" max="3" step="1" value="1">
       <div class="row" style="justify-content:space-between;font-size:13.5px">
@@ -106,7 +106,7 @@ const UI = {
       <div class="row" style="justify-content:flex-end">
         <span id="court-total" style="margin-right:auto;font-size:16px"></span>
         <button class="sketch-btn" id="court-cancel">再考虑一下</button>
-        <button class="sketch-btn gold" id="court-ok">开始求爱 ⚡</button>
+        <button class="sketch-btn gold" id="court-ok">开始点化 ⚡</button>
       </div>`);
     /* 头像 */
     const pc = mask.querySelector('#court-portrait').getContext('2d');
@@ -133,7 +133,7 @@ const UI = {
       mask.querySelector('#court-ok').disabled = !ok;
       const rep = cr.courtCount ? '<br><span style="color:#9a5a4a;font-size:12.5px">与她的第 '+(cr.courtCount+1)+' 次结晶：品质潜力 -'+Math.floor(cr.courtCount/2)+'</span>' : '';
       mask.querySelector('#court-info').innerHTML =
-        '当前神力：<b>'+Math.floor(Z.state.power)+'</b> · 母亲品质基础：'+stars(Math.max(0,Math.min(4,base)))+rep;
+        '当前神力：<b>'+Math.floor(Z.state.power)+'</b> · 生灵品质基础：'+stars(Math.max(0,Math.min(4,base)))+rep;
     };
     function QUALITY_NAME(q){ return Z.QUALITY[Math.max(0,Math.min(4,q))].name; }
     mask.querySelector('#court-slider').oninput = e=>{ injectLv = +e.target.value; refresh(); };
@@ -146,12 +146,12 @@ const UI = {
     refresh();
   },
 
-  /* ---------- 繁殖动画（含蓄搞笑版） ---------- */
+  /* ---------- 点化演出（象征手法版） ---------- */
   breedAnimation(cr, injectLv){
     const ov = $('breed-overlay');
     const stage = $('breed-stage');
     ov.style.display = 'flex';
-    /* 左：宙斯，右：母亲 */
+    /* 左：宙斯，右：生灵 */
     const cl = $('breed-fig-l').querySelector('canvas').getContext('2d');
     const cr2 = $('breed-fig-r').querySelector('canvas').getContext('2d');
     cl.clearRect(0,0,130,170); cr2.clearRect(0,0,130,170);
@@ -172,10 +172,10 @@ const UI = {
     const textEl = $('breed-text');
     const seq = [
       '宙斯甩了甩胡子上的闪电碎屑……',
-      '「姑娘，我给你看个宝贝——我的权杖。」',
-      '⚡ 一段不可描述但气氛到位的神话故事 ⚡',
-      '雷声大作，大地回春，羊群咩咩叫好……',
-      '十个月后——（神话时间，很快）'
+      '「看好了——这是奥林匹斯的雷霆。」',
+      '⚡ 云层翻涌，神力注入大地 ⚡',
+      '雷声滚过山谷，万物屏息……',
+      '一个新的生命，就此诞生。'
     ];
     let step = 0;
     textEl.textContent = seq[0];
@@ -200,10 +200,10 @@ const UI = {
       ov.style.display = 'none';
       if (res){
         Z.audio.coin();
-        UI.toast('⚡ 求爱成功！'+Z.SPECIES[cr.key].name+' 正在孕育宙斯的后代（约 '+res.pregTime+' 秒后出生）','good');
-        Z.log('与'+Z.SPECIES[cr.key].name+'结缘，神力注入 '+injectLv+' 档，消耗 '+res.cost+'。','good');
+        UI.toast('⚡ 点化成功！'+Z.SPECIES[cr.key].name+' 正在凝聚宙斯的眷属（约 '+res.pregTime+' 秒后出生）','good');
+        Z.log('与'+Z.SPECIES[cr.key].name+'点化，神力注入 '+injectLv+' 档，消耗 '+res.cost+'。','good');
       } else {
-        UI.toast('神力不足……宙斯尴尬地收起了权杖','bad');
+        UI.toast('神力不足……宙斯尴尬地收起了法杖','bad');
       }
     }, 4200);
   },
@@ -215,7 +215,7 @@ const UI = {
     const inZone = zoneId === Z.zeus.zone;
     UI.toast('👶 '+off.name+' 出生了！（'+q.name+' · '+(q.rate*Z.tempMult('income')*(1+0.06*Z.state.upgrades.siphon)).toFixed(2)+'/秒）' +
       (inZone ? '' : ' 出生于'+Z.zoneById(zoneId).name), 'good');
-    Z.log(off.name+' 降临人世，血统：'+q.name+'。','good');
+    Z.log(off.name+' 降临人世，品阶：'+q.name+'。','good');
   },
 
   /* ---------- 赫拉降临 ---------- */
@@ -227,7 +227,7 @@ const UI = {
     const quotes = [
       '「宙斯。我数过了。一个不差。」',
       '「我在奥林匹斯补个觉的工夫，你又干了什么？」',
-      '「你的子嗣？哦，你是说我的新牛群。」',
+      '「你的眷属？哦，你是说我的新牛群。」',
       '「别躲了，孔雀都告诉我了。它什么都看到了。」',
       '「我这次下来，是带着刑具和原谅二选一的套餐。」'
     ];
@@ -284,7 +284,7 @@ const UI = {
     };
   },
 
-  /* ---------- 子嗣名录 ---------- */
+  /* ---------- 眷属名录 ---------- */
   showRoster(){
     const st = Z.state;
     let rows = '';
@@ -304,16 +304,16 @@ const UI = {
     const pregRows = st.pregnancies.map(p=>
       '<tr><td>'+p.name+'（待产）</td><td colspan="2">'+Z.SPECIES[p.key].name+' · '+Z.QUALITY[p.quality].name+'</td><td>还有 '+Math.max(0,Math.ceil(p.dueT-st.t))+' 秒</td><td></td></tr>').join('');
     const html = `
-      <div style="font-size:14px;margin-bottom:8px">子嗣总数 <b>${st.offspring.length}</b> · 孕育中 <b>${st.pregnancies.length}</b> ·
+      <div style="font-size:14px;margin-bottom:8px">眷属总数 <b>${st.offspring.length}</b> · 凝聚中 <b>${st.pregnancies.length}</b> ·
         总收益 <b style="color:var(--green)">${Z.totalIncomeRate().toFixed(2)}/秒</b></div>
-      <table class="roster"><tr><th>名字</th><th>血统</th><th>阶段</th><th>收益</th><th>状态</th></tr>
-      ${pregRows}${rows || '<tr><td colspan="5" style="text-align:center;color:#a0946e;padding:20px">还没有子嗣。宙斯，出发吧。（走近生命按 E）</td></tr>'}</table>`;
-    this.openModal('子嗣名录 · 宙斯的家谱', html);
+      <table class="roster"><tr><th>名字</th><th>品阶</th><th>阶段</th><th>收益</th><th>状态</th></tr>
+      ${pregRows}${rows || '<tr><td colspan="5" style="text-align:center;color:#a0946e;padding:20px">还没有眷属。宙斯，出发吧。（走近生命按 E）</td></tr>'}</table>`;
+    this.openModal('眷属名录 · 宙斯的家谱', html);
   },
 
   /* ---------- 奥林匹斯神殿 ---------- */
   showTemple(){
-    let html = '<div style="font-size:13.5px;color:#7a6a45;margin-bottom:6px">神力投资于自身，是最稳妥的多子多福。</div>';
+    let html = '<div style="font-size:13.5px;color:#7a6a45;margin-bottom:6px">神力投资于自身，是最稳妥的成神之路。</div>';
     for (const key in Z.UPGRADES){
       const u = Z.UPGRADES[key];
       const lv = Z.state.upgrades[key];
@@ -352,7 +352,7 @@ const UI = {
       const species = zone.spawns.map(s=>Z.SPECIES[s[0]].name).join('、');
       html += `<div class="upg-card" style="${unlocked?'':'opacity:.55'}">
         <div><b style="font-size:15.5px">${zone.name}</b> ${here?'<span class="tag hero">当前</span>':''}
-          <div style="font-size:12.5px;color:#7a6a45">${unlocked? '可结缘：'+species : '解锁条件：神力 '+zone.unlock.toLocaleString()+'（当前 '+Math.floor(Z.state.power).toLocaleString()+'）'}</div></div>
+          <div style="font-size:12.5px;color:#7a6a45">${unlocked? '可点化：'+species : '解锁条件：神力 '+zone.unlock.toLocaleString()+'（当前 '+Math.floor(Z.state.power).toLocaleString()+'）'}</div></div>
         <button class="sketch-btn ${here?'':'gold'}" data-zone="${zone.id}" ${unlocked&&!here?'':'disabled'}>${here?'就在这里':'雷霆传送'}</button>
       </div>`;
     }
@@ -384,18 +384,18 @@ const UI = {
     this.openModal('帮助 · 成神指南', `
       <div class="help-sec"><h3>目标</h3><p>把神力从 <b>100</b> 攒到 <b>10000</b>，登神成为众神之父。全程约 2.5~3.5 小时，勿急。</p></div>
       <div class="help-sec"><h3>操作</h3>
-        <p><kbd>W A S D</kbd> / 方向键移动 · 鼠标点击地面寻路 · <kbd>E</kbd> 与身边的生命求爱 ·
+        <p><kbd>W A S D</kbd> / 方向键移动 · 鼠标点击地面寻路 · <kbd>E</kbd> 与身边的生命点化 ·
         <kbd>Q</kbd> 神界地图传送 · <kbd>H</kbd> 帮助 · <kbd>M</kbd> 静音 · <kbd>Esc</kbd> 关闭窗口</p></div>
-      <div class="help-sec"><h3>多子多福</h3>
-        <p>走近任意生命按 <kbd>E</kbd>，选择神力注入档位后求爱。注入越多，子嗣品质越高（凡人→半神→英雄→神裔→传奇神裔），
-        品质决定每秒供给的神力。孕育 60 秒出生，成长 150 秒后达到全额收益。</p>
-        <p>同一母亲反复繁殖会降低品质潜力，且她需要休息——广撒网才是王道（这很宙斯）。</p></div>
+      <div class="help-sec"><h3>点化与眷属</h3>
+        <p>走近任意生命按 <kbd>E</kbd>，选择神力注入档位后点化。注入越多，眷属品质越高（凡人→半神→英雄→神裔→传奇神裔），
+        品质决定每秒供给的神力。凝聚 60 秒出生，成长 150 秒后达到全额收益。</p>
+        <p>同一位生灵反复点化会降低品质潜力，且它需要休息——广撒网才是王道（这很宙斯）。</p></div>
       <div class="help-sec"><h3>五片大陆</h3>
         <p>人类村庄（0）→ 精灵森林（300）→ 碧海深渊（1000）→ 神话火山（3000）→ 冥界边境（6500）。
         越往后品质上限越高、成本也越高。</p></div>
       <div class="help-sec"><h3>赫拉</h3>
-        <p>子嗣越多，赫拉怒气越高，降临越频繁。孔雀出现是预警。降临时可选「神力护佑」或「忍受惩罚」
-        （子嗣可能被变成牛，哞）。点击顶栏「赫拉的怒气」面板可以送礼物安抚。</p></div>
+        <p>眷属越多，赫拉怒气越高，降临越频繁。孔雀出现是预警。降临时可选「神力护佑」或「忍受惩罚」
+        （眷属可能被变成牛，哞）。点击顶栏「赫拉的怒气」面板可以送礼物安抚。</p></div>
       <div class="help-sec"><h3>其他</h3>
         <p>随机事件好坏掺半；地图上的金苹果记得捡；奥林匹斯神殿的升级很值；存档每 10 秒自动进行，也可导出存档码分享。</p></div>`);
   },
@@ -426,11 +426,11 @@ const UI = {
     Z.audio.fanfare();
     $('win-stats').innerHTML =
       '成神用时：<b>'+fmtAge(st.t)+'</b><br>' +
-      '子嗣总数：<b>'+st.offspring.length+'</b> 位（现存收益 '+Z.totalIncomeRate().toFixed(2)+'/秒）<br>' +
+      '眷属总数：<b>'+st.offspring.length+'</b> 位（现存收益 '+Z.totalIncomeRate().toFixed(2)+'/秒）<br>' +
       '被赫拉变成牛：<b>'+st.stats.cows+'</b> 头（哞）<br>' +
       '赫拉降临：<b>'+st.hera.visits+'</b> 次 · 送出礼物：<b>'+st.stats.gifts+'</b> 份<br>' +
       '经历事件：好事 <b>'+st.stats.eventsGood+'</b> 次 · 坏事 <b>'+st.stats.eventsBad+'</b> 次<br>' +
-      '求爱次数：<b>'+st.stats.courted+'</b> 次（宙斯表示毫无倦意）';
+      '点化次数：<b>'+st.stats.courted+'</b> 次（宙斯表示毫无倦意）';
     $('win-overlay').classList.add('on');
   },
 

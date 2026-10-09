@@ -73,7 +73,7 @@ const A = {
     this.tone(988, 0.1, 'triangle', 0.15, 0.09);
     this.tone(1319, 0.3, 'triangle', 0.16, 0.18);
   },
-  heart(){ // 求爱心动
+  heart(){ // 点化心动
     this.tone(523, 0.1, 'sine', 0.16);
     this.tone(659, 0.12, 'sine', 0.16, 0.09);
     this.tone(784, 0.2, 'sine', 0.15, 0.19);
@@ -81,7 +81,7 @@ const A = {
   pop(){ // 气泡/出生
     this.tone(300, 0.07, 'sine', 0.18, 0, 720);
   },
-  babyFanfare(){ // 子嗣诞生
+  babyFanfare(){ // 眷属诞生
     const notes=[523,659,784,1047];
     notes.forEach((f,i)=>this.tone(f,0.16,'triangle',0.15,i*0.11));
   },

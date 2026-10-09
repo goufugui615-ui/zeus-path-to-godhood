@@ -79,7 +79,7 @@ function face(ctx, x, y, mood, blink, o){
     ctx.stroke();
     return;
   }
-  /* —— 近景（立绘/求爱）：精修五官 —— */
+  /* —— 近景（立绘/点化）：精修五官 —— */
   /* 眉 */
   S(ctx, o.browColor||INK, 1.5, 0.9);
   if (angry){ L(ctx,[[x-ex0-2.4,y-3.4],[x-ex0+1.3,y-2.4]]); L(ctx,[[x+ex0+2.4,y-3.4],[x+ex0-1.3,y-2.4]]); }
@@ -353,7 +353,7 @@ function drawZeus(ctx, t, o){
 }
 
 /* ============ 参数化动物绘制器 ============ */
-/* 四足：cfg {scale, coat, accent, spots, horn, tail, ear, udder, mane, snout, eye} */
+/* 四足：cfg {scale, coat, accent, spots, horn, tail, ear, mane, snout, eye} */
 function beast4(ctx, t, o, cfg){
   cfg = cfg||{};
   const D = lod(ctx), s = cfg.scale||1;
@@ -386,8 +386,6 @@ function beast4(ctx, t, o, cfg){
   if (cfg.stripes){ ctx.save(); S(ctx, cfg.accent||'#3a3a3a', 1.5, 0.5);
     for (let i=0;i<3;i++){ const x=-bw*0.5+i*4.4*s; L(ctx,[[x,by-bh*1.05],[x+1.2*s,by+bh*0.5]]); }
     ctx.restore(); S(ctx, INK, 2); }
-  /* 乳房（母畜） */
-  if (cfg.udder){ S(ctx, INK, 1.2, 0.7); E(ctx,-bw*0.15, by+bh*0.78, 2.2*s, 1.5*s, '#e8c8c8', 0.35); S(ctx, INK, 2); }
   /* 尾巴 */
   if (cfg.tail!==false){
     S(ctx, INK, 1.8);
@@ -1072,15 +1070,15 @@ const PLAN = {
   serpent: beastSerpent
 };
 
-/* ============ 子嗣（宙斯特征 + 母亲血统混血） ============ */
+/* ============ 眷属（宙斯特征 + 生灵品阶融合） ============ */
 function drawOffspring(ctx, t, o){
   const sc = [0.45, 0.65, 0.82][o.stage==null?2:o.stage];
   shadow(ctx, 9*sc);
   ctx.save(); ctx.scale(sc,sc);
-  if (o.cow){ ctx.save(); ctx.scale(1.15,1.15); beast4(ctx, t, o, { scale:1, coat:'#e8dcc8', accent:'#4a3a2b', spots:true, horn:'curved', tail:'tuft', udder:true }); ctx.restore(); ctx.restore(); return; }
+  if (o.cow){ ctx.save(); ctx.scale(1.15,1.15); beast4(ctx, t, o, { scale:1, coat:'#e8dcc8', accent:'#4a3a2b', spots:true, horn:'curved', tail:'tuft' }); ctx.restore(); ctx.restore(); return; }
   const spec = (Z.SPECIES && Z.SPECIES[o.trait]) || null;
   const plan = spec && spec.plan;
-  if (plan && plan!=='humanoid'){ /* 兽形子嗣：小型化的母亲形态 */
+  if (plan && plan!=='humanoid'){ /* 兽形眷属：小型化的生灵形态 */
     ctx.save(); ctx.scale(0.78,0.78);
     (PLAN[plan]||beast4)(ctx, t, o, (spec&&spec.cfg)||{});
     ctx.restore();
@@ -1108,7 +1106,7 @@ function drawOffspring(ctx, t, o){
   S(ctx,'#ffd94a',1.3);
   for(let i=0;i<o.quality;i++) drawSpark(ctx, -6+i*4, hy-11-i*2, t+i*0.8);
   face(ctx,0,hy+1,true, Math.sin(t*0.8+o.seed)>0.97,{lod:1.1});
-  /* 母亲血统的混血特征 */
+  /* 生灵品阶的融合特征 */
   const tr = o.trait||'villager';
   const cfgs = (spec&&spec.cfg)||{};
   S(ctx,INK,1.5);
@@ -1153,7 +1151,7 @@ function drawHeraPortrait(ctx, t){
   L(ctx,[[-7,-40],[-9,-14]]); L(ctx,[[0,-40],[0,-14]]); L(ctx,[[7,-40],[9,-14]]);
   S(ctx, INK, 2);
   L(ctx,[[-12,-38],[-19,-28],[-14,-22]]); L(ctx,[[12,-38],[19,-29]]);
-  /* 权杖 */
+  /* 闪电法杖 */
   S(ctx,INK,1.9); L(ctx,[[19,-29],[19,-62]]); C(ctx,19,-66,5,'#d4a017',0.4); drawSpark(ctx,19,-66,t);
   /* 头 */
   const hy=-51;

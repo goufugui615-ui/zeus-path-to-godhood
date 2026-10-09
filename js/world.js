@@ -1,57 +1,57 @@
 /* ============================================================
- * 宙斯成神之路 · 世界系统：五片大陆、羊皮纸地图、可结缘物种图鉴
+ * 宙斯成神之路 · 世界系统：五片大陆、羊皮纸地图、可点化物种图鉴
  * v2：羊皮纸做旧质感（纸纹/水渍/折痕/经纬网/罗盘/卷轴地名）
- *     可结缘物种大扩容——凡有气息者，皆可结缘（含农庄牲畜）
+ *     可点化物种大扩容——凡有气息者，皆可点化（含农庄牲畜）
  * ============================================================ */
 (function(){
 'use strict';
 const Z = (window.Z = window.Z || {});
 
-/* ---------- 可结缘物种图鉴（plan 决定绘制方式） ---------- */
+/* ---------- 可点化物种图鉴（plan 决定绘制方式） ---------- */
 Z.SPECIES = {
   /* ===== 人类村庄 / 农家庄园 ===== */
-  villager:  { name:'农家姑娘',   baseQ:1, desc:'勤劳朴实，对持闪电的男人毫无防备' },
-  farmwoman: { name:'农妇',       baseQ:1, desc:'力气大，一篮子鸡蛋能单手提起' },
+  villager:  { name:'农家少女',   baseQ:1, desc:'勤劳朴实，对持闪电的男人毫无防备' },
+  farmwoman: { name:'织娘',       baseQ:1, desc:'力气大，一篮子鸡蛋能单手提起' },
   priestess: { name:'女祭司',     baseQ:2, desc:'侍奉神明的人，近水楼台' },
   princess:  { name:'流亡的公主', baseQ:3, rare:true, desc:'微服私访中，王冠藏在行李箱夹层' },
   /* —— 庄园牲畜（宙斯：物种从来不是限制） —— */
-  cow:    { name:'母牛', baseQ:0, plan:'quadruped', cfg:{ scale:1.25, coat:'#e8dcc8', accent:'#4a3a2b', spots:true, horn:'curved', tail:'tuft', udder:true, ear:'round' },
+  cow:    { name:'白牛', baseQ:0, plan:'quadruped', cfg:{ scale:1.25, coat:'#e8dcc8', accent:'#4a3a2b', spots:true, horn:'curved', tail:'tuft', ear:'round' },
             desc:'伊俄的远房表妹，低头吃草时悄悄瞄了一眼雷霆' },
-  sheep:  { name:'母羊', baseQ:0, plan:'quadruped', cfg:{ scale:0.95, coat:'#e8e8e8', accent:'#8a8a8a', spots:true, horn:'spiral', tail:'short', udder:true, ear:'small' },
+  sheep:  { name:'绵羊', baseQ:0, plan:'quadruped', cfg:{ scale:0.95, coat:'#e8e8e8', accent:'#8a8a8a', spots:true, horn:'spiral', tail:'short', ear:'small' },
             desc:'金羊毛的远亲，毛很蓬松，脾气很好' },
-  goat:   { name:'母山羊', baseQ:0, plan:'quadruped', cfg:{ scale:0.9, coat:'#d8c8a8', accent:'#6b4a2b', horn:'straight', tail:'short', udder:true, ear:'point' },
-            desc:'阿玛尔忒亚的后代——论辈分，她奶过幼年的宙斯' },
-  sow:    { name:'母猪', baseQ:0, plan:'quadruped', cfg:{ scale:1.05, coat:'#e8c0b8', accent:'#a86a6a', tail:'curl', udder:true, ear:'point', snout:'long' },
+  goat:   { name:'山羊', baseQ:0, plan:'quadruped', cfg:{ scale:0.9, coat:'#d8c8a8', accent:'#6b4a2b', horn:'straight', tail:'short', ear:'point' },
+            desc:'阿玛尔忒亚的后裔——论辈分，她照看过幼年的宙斯' },
+  sow:    { name:'花猪', baseQ:0, plan:'quadruped', cfg:{ scale:1.05, coat:'#e8c0b8', accent:'#a86a6a', tail:'curl', ear:'point', snout:'long' },
             desc:'吃饱就睡，睡醒就吃，一个朴素的生活哲学家' },
-  hen:    { name:'母鸡', baseQ:0, plan:'bird', cfg:{ scale:0.85, coat:'#e8dcc8', accent:'#c8863a', comb:true, wattle:true, tail:'fan' },
+  hen:    { name:'芦花鸡', baseQ:0, plan:'bird', cfg:{ scale:0.85, coat:'#e8dcc8', accent:'#c8863a', comb:true, wattle:true, tail:'fan' },
             desc:'每天下一个蛋，偶尔下一个神谕' },
-  goose:  { name:'母鹅', baseQ:0, plan:'bird', cfg:{ scale:1.0, coat:'#f0eee6', accent:'#c8863a', crest:true, tail:'short', beakColor:'#c8863a' },
+  goose:  { name:'白鹅', baseQ:0, plan:'bird', cfg:{ scale:1.0, coat:'#f0eee6', accent:'#c8863a', crest:true, tail:'short', beakColor:'#c8863a' },
             desc:'看家护院，嗓门比看门狗还大，鹅生偶像' },
-  mare:   { name:'母马', baseQ:1, plan:'quadruped', cfg:{ scale:1.25, coat:'#8a5a3a', accent:'#3a2a1a', tail:'plume', mane:true, ear:'point', snout:'long' },
+  mare:   { name:'枣红马', baseQ:1, plan:'quadruped', cfg:{ scale:1.25, coat:'#8a5a3a', accent:'#3a2a1a', tail:'plume', mane:true, ear:'point', snout:'long' },
             desc:'跑起来像风，停下来像诗' },
-  donkey: { name:'母驴', baseQ:0, plan:'quadruped', cfg:{ scale:1.0, coat:'#b8b0a0', accent:'#4a4a4a', tail:'tuft', ear:'long', mane:true },
+  donkey: { name:'灰驴', baseQ:0, plan:'quadruped', cfg:{ scale:1.0, coat:'#b8b0a0', accent:'#4a4a4a', tail:'tuft', ear:'long', mane:true },
             desc:'固执，但认准了就不松口——宙斯很欣赏这种品质' },
-  dog:    { name:'母犬', baseQ:0, plan:'quadruped', cfg:{ scale:0.85, coat:'#c8a86a', accent:'#6b4a2b', tail:'curl', ear:'point', snout:'long' },
+  dog:    { name:'猎犬', baseQ:0, plan:'quadruped', cfg:{ scale:0.85, coat:'#c8a86a', accent:'#6b4a2b', tail:'curl', ear:'point', snout:'long' },
             desc:'忠诚，会跟着宙斯走三条街还摇尾巴' },
-  cat:    { name:'母猫', baseQ:1, plan:'quadruped', cfg:{ scale:0.72, coat:'#d8c8b0', accent:'#4a3a2a', stripes:true, tail:'plume', ear:'point' },
+  cat:    { name:'花猫', baseQ:1, plan:'quadruped', cfg:{ scale:0.72, coat:'#d8c8b0', accent:'#4a3a2a', stripes:true, tail:'plume', ear:'point' },
             desc:'巴斯特座下的圣猫，高冷，但会蹭雷霆' },
-  rabbit: { name:'母兔', baseQ:0, plan:'quadruped', cfg:{ scale:0.62, coat:'#e8e0d8', accent:'#c8a8a8', tail:'short', ear:'long' },
-            desc:'繁殖界的传说。宙斯肃然起敬，并递上了名片' },
+  rabbit: { name:'野兔', baseQ:0, plan:'quadruped', cfg:{ scale:0.62, coat:'#e8e0d8', accent:'#c8a8a8', tail:'short', ear:'long' },
+            desc:'春天里的传说。宙斯肃然起敬，并递上了名片' },
   bee:    { name:'蜂后', baseQ:2, plan:'bug', cfg:{ scale:1.15, kind:'bee', coat:'#e8c05a', accent:'#3a3a3a', stripes:true },
             desc:'蜂蜜与秩序的女王——宙斯小时候还喝过她的蜜' },
 
   /* ===== 精灵森林 ===== */
   dryad:      { name:'树精灵',     baseQ:2, desc:'和橡树共用一条根，心情随季节变化' },
   nymph:      { name:'森林仙女',   baseQ:2, desc:'在溪边梳头，被撞见也不生气' },
-  centauress: { name:'半人马姑娘', baseQ:3, desc:'马拉松式恋爱观，先跑赢她再说' },
+  centauress: { name:'半人马少女', baseQ:3, desc:'马拉松式恋爱观，先跑赢她再说' },
   muse:       { name:'缪斯女神',   baseQ:4, rare:true, desc:'九位缪斯路过了一位，随身携带里拉琴' },
-  doe:      { name:'母鹿', baseQ:1, plan:'quadruped', cfg:{ scale:1.0, coat:'#c89868', accent:'#f0e0d0', spots:true, horn:'antler', tail:'short', ear:'point' },
+  doe:      { name:'赤鹿', baseQ:1, plan:'quadruped', cfg:{ scale:1.0, coat:'#c89868', accent:'#f0e0d0', spots:true, horn:'antler', tail:'short', ear:'point' },
               desc:'阿尔忒弥斯的圣兽，跑起来像林间的一道光' },
-  vixen:    { name:'母狐', baseQ:1, plan:'quadruped', cfg:{ scale:0.78, coat:'#d87a3a', accent:'#f0e8e0', tail:'plume', ear:'point', snout:'long' },
+  vixen:    { name:'赤狐', baseQ:1, plan:'quadruped', cfg:{ scale:0.78, coat:'#d87a3a', accent:'#f0e8e0', tail:'plume', ear:'point', snout:'long' },
               desc:'狡黠，据说骗过三个英雄和两个半神' },
-  shewolf:  { name:'母狼', baseQ:1, plan:'quadruped', cfg:{ scale:1.0, coat:'#8a8a92', accent:'#4a4a52', tail:'plume', ear:'point', snout:'long', mane:true },
+  shewolf:  { name:'苍狼', baseQ:1, plan:'quadruped', cfg:{ scale:1.0, coat:'#8a8a92', accent:'#4a4a52', tail:'plume', ear:'point', snout:'long', mane:true },
               desc:'罗马城的乳母，护崽，眼神很有压迫感' },
-  shebear:  { name:'母熊', baseQ:2, plan:'quadruped', cfg:{ scale:1.35, coat:'#7a5a3a', accent:'#3a2a1a', tail:'short', ear:'round', snout:'long' },
+  shebear:  { name:'棕熊', baseQ:2, plan:'quadruped', cfg:{ scale:1.35, coat:'#7a5a3a', accent:'#3a2a1a', tail:'short', ear:'round', snout:'long' },
               desc:'卡利斯托的化身……宙斯这次是带着礼物来的' },
   owl:      { name:'猫头鹰', baseQ:2, plan:'bird', cfg:{ scale:0.95, coat:'#a89878', accent:'#5a4a3a', crest:true, tail:'short', beakColor:'#c8863a' },
               desc:'雅典娜的圣鸟，看得懂宙斯的心思（并感到无语）' },
@@ -61,7 +61,7 @@ Z.SPECIES = {
               desc:'阿拉克涅的传人，织工一等一，嘴上不饶人' },
   serpent:  { name:'灵蛇', baseQ:2, plan:'serpent', cfg:{ scale:1.05, coat:'#7a9a4a', inkColor:'#4a6b3a' },
               desc:'医神杖上的蛇，懂点药理，也懂人心' },
-  swan:     { name:'天鹅姑娘', baseQ:2, plan:'bird', cfg:{ scale:1.25, coat:'#f6f2e8', accent:'#e8a04a', crest:true, tail:'short', beakColor:'#e8a04a' },
+  swan:     { name:'天鹅少女', baseQ:2, plan:'bird', cfg:{ scale:1.25, coat:'#f6f2e8', accent:'#e8a04a', crest:true, tail:'short', beakColor:'#e8a04a' },
               desc:'勒达同款——这是宙斯的老本行，驾轻就熟' },
   naiad:    { name:'河仙女', baseQ:2, desc:'泉水与溪流的宁芙，捧起来能喝的那种清甜' },
 
@@ -71,11 +71,11 @@ Z.SPECIES = {
   siren:   { name:'塞壬',       baseQ:4, desc:'歌声让水手跳海，让宙斯停下脚步' },
   dolphin: { name:'海豚', baseQ:2, plan:'fish', cfg:{ scale:1.0, coat:'#8ab8d8', inkColor:'#2f5d8a' },
              desc:'波塞冬的信使，但愿意为宙斯跑腿' },
-  whale:   { name:'母鲸', baseQ:3, plan:'fish', cfg:{ scale:1.6, coat:'#7a9ab8', inkColor:'#2f5d8a', blow:true },
+  whale:   { name:'巨鲸', baseQ:3, plan:'fish', cfg:{ scale:1.6, coat:'#7a9ab8', inkColor:'#2f5d8a', blow:true },
              desc:'深海的歌者，一开口整片海都安静了' },
-  shark:   { name:'母鲨', baseQ:2, plan:'fish', cfg:{ scale:1.2, coat:'#9aa8b0', inkColor:'#4a5a6a', shark:true },
+  shark:   { name:'灰鲨', baseQ:2, plan:'fish', cfg:{ scale:1.2, coat:'#9aa8b0', inkColor:'#4a5a6a', shark:true },
              desc:'牙口好，性格直，喜欢直接表达好感' },
-  octopus: { name:'章鱼女', baseQ:3, desc:'八只手，抱起来很稳，也很会沏茶' },
+  octopus: { name:'章鱼精', baseQ:3, desc:'八条触手，八倍麻烦，还很会沏茶' },
   turtle:  { name:'海龟', baseQ:2, plan:'quadruped', cfg:{ scale:0.85, coat:'#7a9a6a', accent:'#4a6b3a', tail:'short', ear:'none' },
              desc:'背着房子旅行，慢，但从来不缺席' },
   seaserpent:{ name:'海蛇', baseQ:3, plan:'serpent', cfg:{ scale:1.3, coat:'#5a9ad0', inkColor:'#2f5d8a', hood:true },
@@ -86,9 +86,9 @@ Z.SPECIES = {
   gorgo:   { name:'蛇发女妖',   baseQ:4, desc:'别看她的眼睛——看心就好' },
   sphinx:  { name:'斯芬克斯',   baseQ:4, desc:'会先出一道谜语，答错也没关系' },
   phoenix: { name:'凤凰',       baseQ:4, rare:true, desc:'五百年一遇的火鸟，正好今天路过' },
-  bat:     { name:'母蝠', baseQ:1, plan:'bird', cfg:{ scale:0.8, coat:'#5a4a5a', accent:'#3a2a3a', crest:true, tail:'short', legColor:'#3a2a3a' },
+  bat:     { name:'夜蝠', baseQ:1, plan:'bird', cfg:{ scale:0.8, coat:'#5a4a5a', accent:'#3a2a3a', crest:true, tail:'short', legColor:'#3a2a3a' },
              desc:'倒挂着看世界，觉得宙斯今天格外端正' },
-  scorpion:{ name:'母蝎', baseQ:2, plan:'bug', cfg:{ scale:1.0, kind:'scorpion', coat:'#8a5a2a', accent:'#c8562a' },
+  scorpion:{ name:'沙蝎', baseQ:2, plan:'bug', cfg:{ scale:1.0, kind:'scorpion', coat:'#8a5a2a', accent:'#c8562a' },
              desc:'尾巴有毒，心是软的，扎人之前会先警告三次' },
   gargoyle:{ name:'石像鬼', baseQ:3, desc:'在教堂屋檐上蹲了三百年，终于有人问她的名字' },
 
@@ -100,10 +100,10 @@ Z.SPECIES = {
               desc:'三头犬的妹妹，只咬坏人，对宙斯摇尾巴' },
   frost:    { name:'霜女', baseQ:3, desc:'冥河的寒气凝成的少女，靠近时雷都会打颤' },
   astral:   { name:'星灵', baseQ:4, desc:'诞生于群星之间的意识，说话像星尘洒落' },
-  lamia:    { name:'拉弥亚', baseQ:3, desc:'被赫拉诅咒过的旧情人……气氛有点尴尬，但都过去了' }
+  lamia:    { name:'拉弥亚', baseQ:3, desc:'被赫拉诅咒过的旧识……气氛有点尴尬，但都过去了' }
 };
 
-/* ---------- 环境生物（装饰用，不可结缘） ---------- */
+/* ---------- 环境生物（装饰用，不可点化） ---------- */
 Z.AMBIENT = { villager_m:'男村民', dog:'狗', sheep:'羊', cow:'牛', dolphin:'海豚', turtle:'海龟' };
 
 /* ---------- 大陆定义 ---------- */
